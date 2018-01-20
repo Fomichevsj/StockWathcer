@@ -3,46 +3,40 @@ package com.stockWathcer.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>
  */
 public class stockWathcer implements EntryPoint {
 
+    private VerticalPanel mainPanel = new VerticalPanel();
+    private FlexTable stocksFlexTable = new FlexTable();
+    private HorizontalPanel addPanel = new HorizontalPanel();
+    private TextBox newSymbolTextBox = new TextBox();
+    private Button addStockButton = new Button("Add");
+    private Label lastUpdatedLabel = new Label();
+
     /**
      * This is the entry point method.
      */
     public void onModuleLoad() {
-        final Button button = new Button("Click me, please. Yo!");
-        final Label label = new Label();
+        // Create table for stock data.
+        stocksFlexTable.setText(0, 0, "Symbol");
+        stocksFlexTable.setText(0, 1, "Price");
+        stocksFlexTable.setText(0, 2, "Change");
+        stocksFlexTable.setText(0, 3, "Remove");
+        // Assemble Add Stock panel.
+        addPanel.add(newSymbolTextBox);
+        addPanel.add(addStockButton);
 
-        button.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                if (label.getText().equals("")) {
-                    stockWathcerService.App.getInstance().getMessage("Hello, World!", new MyAsyncCallback(label));
-                } else {
-                    label.setText("");
-                }
-            }
-        });
+        // Assemble Main panel.
+        mainPanel.add(stocksFlexTable);
+        mainPanel.add(addPanel);
+        mainPanel.add(lastUpdatedLabel);
+        // Associate the Main panel with the HTML host page.
+        RootPanel.get("stockList").add(mainPanel);
+        // Move cursor focus to the input box.
+        newSymbolTextBox.setFocus(true);
     }
 
-    private static class MyAsyncCallback implements AsyncCallback<String> {
-        private Label label;
-
-        public MyAsyncCallback(Label label) {
-            this.label = label;
-        }
-
-        public void onSuccess(String result) {
-            label.getElement().setInnerHTML(result);
-        }
-
-        public void onFailure(Throwable throwable) {
-            label.setText("Failed to receive answer from server!");
-        }
-    }
 }
