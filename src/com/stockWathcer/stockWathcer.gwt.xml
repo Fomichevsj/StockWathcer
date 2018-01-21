@@ -8,7 +8,8 @@
     <!-- Specify the app entry point class.                   -->
     <entry-point class='com.stockWathcer.client.stockWathcer'/>
 
-
+    <inherits name="com.google.gwt.logging.Logging"/>
+    <inherits name="com.google.gwt.user.theme.standard.Standard"/>
     <!-- Specify the app servlets.                   -->
     <servlet path='/stockWathcerService' class='com.stockWathcer.server.stockWathcerServiceImpl'/>
 
