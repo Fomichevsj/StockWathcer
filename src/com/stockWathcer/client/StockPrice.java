@@ -1,5 +1,8 @@
 package com.stockWathcer.client;
 
+/**
+ * Класс реализует информацию об акции (Stock). А именно о цене на акцию и ее изменении
+ */
 public class StockPrice {
     private String symbol;
     private double price;
@@ -8,6 +11,12 @@ public class StockPrice {
     public StockPrice() {
     }
 
+    /**
+     * Конструктор
+     * @param symbol Назване акции
+     * @param price Текущая цена акции
+     * @param change Изменение акции в процентах
+     */
     public StockPrice(String symbol, double price, double change) {
         this.symbol = symbol;
         this.price = price;

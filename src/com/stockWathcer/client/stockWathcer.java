@@ -15,6 +15,7 @@ import java.util.Date;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>
+ * <p>Класс в котором происходит вся основная логика. Является входной точкой</p>
  */
 public class stockWathcer implements EntryPoint {
 
@@ -36,6 +37,7 @@ public class stockWathcer implements EntryPoint {
         stocksFlexTable.setText(0, 1, "Price");
         stocksFlexTable.setText(0, 2, "Change");
         stocksFlexTable.setText(0, 3, "Remove");
+
 
         // Add styles to elements in the stock list table.
         stocksFlexTable.getRowFormatter().addStyleName(0, "watchListHeader");
