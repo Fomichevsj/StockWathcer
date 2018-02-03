@@ -15,29 +15,56 @@ import java.util.Date;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>
+ * <p>Входная точка приложения. Вся основная логика релизована здесь.</p>
  */
-public class stockWathcer implements EntryPoint {
+public class stockWatcher implements EntryPoint {
 
+    /**
+     * Время в милисикундах спустя которое нужно обновлять данные акций
+     */
     private static final int REFRESH_INTERVAL = 5000; // ms
+    /**
+     * Основная вертикальная панель на которой расположена таблица и кнопка добавить
+     */
     private VerticalPanel mainPanel = new VerticalPanel();
+    /**
+     * Таблица в которой будут храниться записи - акции
+     */
     private FlexTable stocksFlexTable = new FlexTable();
+    /**
+     * Горизонтальная панель, на которую добавят кнопку "добавтиь" и поле с вводом новой акции
+     */
     private HorizontalPanel addPanel = new HorizontalPanel();
+    /**
+     * Поле для ввода названия новой акции
+     */
     private TextBox newSymbolTextBox = new TextBox();
+    /**
+     * Кнопка добавить. При нажатии на нее появляется возможность ввести новую название новой акции
+     */
     private Button addStockButton = new Button("Add");
+    /**
+     * Пометка( надпись) которая хранит дату последнего обновления
+     */
     private Label lastUpdatedLabel = new Label();
+    /**
+     * Список строк который хранит названия акций
+     */
     private ArrayList<String> stocks = new ArrayList<String>();
 
     /**
      * This is the entry point method.
+     * <p>Метод - точка входа в приложение.</p>
      */
     public void onModuleLoad() {
-        // Create table for stock data.
+        // Создаем заголвок таблицы
         stocksFlexTable.setText(0, 0, "Symbol");
         stocksFlexTable.setText(0, 1, "Price");
         stocksFlexTable.setText(0, 2, "Change");
         stocksFlexTable.setText(0, 3, "Remove");
 
         // Add styles to elements in the stock list table.
+        //Определяем css стили для заголовка, и всей таблицы
         stocksFlexTable.getRowFormatter().addStyleName(0, "watchListHeader");
         stocksFlexTable.addStyleName("watchList");
         stocksFlexTable.getCellFormatter().addStyleName(0, 1, "watchListNumericColumn");
@@ -45,20 +72,25 @@ public class stockWathcer implements EntryPoint {
         stocksFlexTable.getCellFormatter().addStyleName(0, 3, "watchListRemoveColumn");
 
         // Assemble the Add Stock panel
+        // Добавить на нижнию панель элементы: поля ввода имени акции и кнопку добавить
         addPanel.add(newSymbolTextBox);
         addPanel.add(addStockButton);
-        addPanel.addStyleName("addPanel");
+        addPanel.addStyleName("addPanel");// Добавить стиль на нижнюю панель
         // Assemble Add Stock panel.
+        //TODO две нижние строки нужны? 0_0 я же уже добавил их
         addPanel.add(newSymbolTextBox);
         addPanel.add(addStockButton);
 
         // Assemble Main panel.
+        // Добавим на основую панель таблицу и нижнюю часть
         mainPanel.add(stocksFlexTable);
-        mainPanel.add(addPanel);
+        mainPanel.add(addPanel);// Добавить нижнюю часть
         mainPanel.add(lastUpdatedLabel);
         // Associate the Main panel with the HTML host page.
+        // Прикрпепить к приложениюю? нашу основную панель
         RootPanel.get("stockList").add(mainPanel);
         // Move cursor focus to the input box.
+        // Перевести курсор в поле ввода новой акции
         newSymbolTextBox.setFocus(true);
 
         Timer timer = new Timer() {
@@ -68,8 +100,10 @@ public class stockWathcer implements EntryPoint {
             }
         };
 
+        // Обновлять таблицу через каждые REFRESH_INTERVAL милисекнуд
         timer.scheduleRepeating(REFRESH_INTERVAL);
 
+        // Обработчик нажатия кнопки "добавить"
         addStockButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -77,6 +111,7 @@ public class stockWathcer implements EntryPoint {
             }
         });
 
+        // Обработчик нажатия клавиши Enter
         newSymbolTextBox.addKeyDownHandler(new KeyDownHandler() {
             @Override
             public void onKeyDown(KeyDownEvent event) {
@@ -87,6 +122,9 @@ public class stockWathcer implements EntryPoint {
         });
     }
 
+    /**
+     * <p>Метод которые обновляет данные в таблице цен</p>
+     */
     private void refreshWatchList() {
         final double MAX_PRICE = 100.0; // $100.00
         final double MAX_PRICE_CHANGE = 0.02; // +/- 2%
@@ -103,6 +141,10 @@ public class stockWathcer implements EntryPoint {
         updateTable(prices);
     }
 
+    /**
+     * <p>Фкнция которая обновляет список ЦенНаАкции (class StockPrice)</p>
+     * @param prices
+     */
     private void updateTable(StockPrice[] prices) {
         for (int i = 0; i < prices.length; i++) {
             updateTable(prices[i]);
@@ -117,11 +159,12 @@ public class stockWathcer implements EntryPoint {
 
     /**
      * Update a single row in the stock table.
-     *
-     * @param price Stock data for a single row.
+     * <p>Обновляет одну запись ЦенуНаАкцию (StockPrice)</p>
+     * @param price Цена на акцию для одной строки
      */
     private void updateTable(StockPrice price) {
         // Make sure the stock is still in the stock table.
+        // Убедиться, что акция все еще есть в списке акций
         if (!stocks.contains(price.getSymbol())) {
             return;
         }
